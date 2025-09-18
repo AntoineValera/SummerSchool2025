@@ -1,0 +1,6 @@
+Type: IPython Notebook Extension
+Name: text_formatter
+Link: README.md
+Description: Allows a user to make text on the page become bold, italics or underlined
+Main: main.js
+Compatibility: 4.x, 5.x
