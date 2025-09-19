@@ -1,3 +1,4 @@
+
 """
 Say you have 100 neurons with 1000 timpoints, distributed in 8 groups of 10 cells with -0,8 to 0,8 corrration in activity, Activity is Gcamp, variable in amplitude, (you can generate ground truth impulses, then convert them into exponetial rise and decay events). the last 20 neurons have random activity pattern. Generate this dataset, show me the sorted traces. provide python code, then we'll move to next steps of PCA analysis with cross-validated optimal number of components.
 
@@ -6,11 +7,6 @@ Say you have 100 neurons with 1000 timpoints, distributed in 8 groups of 10 cell
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-# --- Colormap configuration ---
-CMAP_HEATMAP = 'magma'       # for imshow heatmaps
-CMAP_CATEGORICAL = 'tab20'   # for categorical/group/cluster plotting
-NOISE_COLOR = (0.6, 0.6, 0.6, 0.7)
 
 rng = np.random.default_rng(123)
 
@@ -125,7 +121,7 @@ labels_sorted = group_labels[sort_index]
 
 # ---------- plot sorted traces (heatmap) ----------
 plt.figure(figsize=(12, 6))
-im = plt.imshow(dff_sorted, aspect='auto', interpolation='nearest', cmap=CMAP_HEATMAP)
+im = plt.imshow(dff_sorted, aspect='auto', interpolation='nearest')
 plt.xlabel('Time (samples)')
 plt.ylabel('Neurons (sorted by group & prototypicality)')
 plt.title('Synthetic GCaMP dF/F — Sorted Traces')
@@ -267,16 +263,13 @@ pc3 = PCA(n_components=3, svd_solver="full", random_state=42).fit_transform(Xz)
 
 plt.figure(figsize=(8, 7))
 ax = plt.axes(projection='3d')
-# color by group using a categorical colormap
-group_cmap = plt.get_cmap(CMAP_CATEGORICAL)
+# color by group, map group 9 (random) to a smaller marker
 for g in np.unique(labels):
     sel = labels == g
-    col = group_cmap((int(g) - 1) % group_cmap.N)
     ax.scatter(pc3[sel, 0], pc3[sel, 1], pc3[sel, 2],
                s=30 if g != 9 else 20,
                alpha=0.8,
-               label=f'Group {g}',
-               c=[col])
+               label=f'Group {g}')
 ax.set_xlabel('PC1')
 ax.set_ylabel('PC2')
 ax.set_zlabel('PC3')
@@ -322,12 +315,12 @@ unique_labels = np.unique(labels_hdb)
 plt.figure(figsize=(8, 7))
 ax = plt.axes(projection='3d')
 
-# Use categorical colormap consistently
-cat_cmap = plt.get_cmap(CMAP_CATEGORICAL)
+# Simple palette: integers map to Matplotlib tab10 cycle; noise -> gray
 def color_for(lbl):
     if lbl == -1:
-        return NOISE_COLOR  # gray-ish for noise
-    return cat_cmap(lbl % cat_cmap.N)
+        return (0.6, 0.6, 0.6, 0.7)  # gray-ish
+    # cycle through default prop cycle
+    return plt.rcParams['axes.prop_cycle'].by_key()['color'][lbl % 10]
 
 for lbl in unique_labels:
     sel = labels_hdb == lbl
@@ -336,6 +329,7 @@ for lbl in unique_labels:
                alpha=0.85 if lbl != -1 else 0.5,
                label=f'Cluster {lbl}' if lbl != -1 else 'Noise',
                c=[color_for(lbl)])
+
 ax.set_xlabel('PHATE 1')
 ax.set_ylabel('PHATE 2')
 ax.set_zlabel('PHATE 3')
@@ -405,12 +399,12 @@ sort_idx = np.array(sort_idx)
 dff_sorted = calcium_dff[sort_idx] 
 clusters_sorted = cluster_labels[sort_idx]
 # Color map for clusters
-cmap = plt.get_cmap(CMAP_CATEGORICAL)
+cmap = plt.get_cmap('tab10')
 norm = mpl.colors.Normalize(vmin=unique_clusters.min(), vmax=unique_clusters.max())
 cluster_colors = {cl: cmap(norm(cl)) for cl in unique_clusters}
 # Plot
 plt.figure(figsize=(12, 6))
-im = plt.imshow(dff_sorted, aspect='auto', interpolation='nearest', cmap=CMAP_HEATMAP)
+im = plt.imshow(dff_sorted, aspect='auto', interpolation='nearest', cmap='viridis')
 plt.xlabel('Time (samples)')
 plt.ylabel('Neurons (sorted by cluster)')
 plt.title('Calcium dF/F (sorted by cluster)')

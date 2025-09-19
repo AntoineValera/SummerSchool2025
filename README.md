@@ -100,11 +100,17 @@ For quick-start tips, see `Cascade Tuto.md`.
 The notebooks are organised roughly in the order they are used during the summer school. They can be run locally once the
 environment above is installed, or explored directly in the `Projects/` and `Notes/` folders for supplemental material.
 
+### Quick Guides
+
 - **HandsOnGeneralStatistics.ipynb** – warm-up exercises covering descriptive statistics and hypothesis testing.
-- **Linear Regression M1.ipynb** – walkthrough of linear regression applied to motor cortex recordings.
-- **HandsOnML.ipynb** – end-to-end introduction to classical machine-learning workflows (train/test split, pipelines, model evaluation).
 - **HandsOnPCAClust.ipynb** – guided practice on PCA and clustering using curated behavioural data sets.
+- **HandsOnML.ipynb** – end-to-end introduction to classical machine-learning workflows (train/test split, pipelines, model evaluation).
+
+### Advanced tips
+- **Linear Regression M1.ipynb** – walkthrough of linear regression applied to motor cortex recordings.
 - **Dimensionality Reduction and Clustering.ipynb** – extended notebook with additional PCA visualisations and clustering techniques.
+
+### Other
 - **Spike Inference (Cascade).ipynb** – demonstration of spike inference using the Cascade deep-learning toolbox (requires the separate `cascade` environment).
 
 ## MATLAB scripts and data
